@@ -9,6 +9,7 @@ import {Octokit} from '@octokit/action'
 import {glob} from 'glob'
 import {promises} from 'fs'
 const {stat} = promises
+import {randomUUID} from crypto
 
 async function run(): Promise<void> {
   try {
@@ -26,7 +27,7 @@ async function run(): Promise<void> {
         core.error((error as Error).message)
       }
     }
-    let bundlePath = path.join(os.tmpdir(), 'Merged.xcresult')
+    let bundlePath = path.join(os.tmpdir(), 'Merged_'+randomUUID()+'.xcresult')
     if (inputPaths.length > 1) {
       await mergeResultBundle(bundlePaths, bundlePath)
     } else {
