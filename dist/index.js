@@ -1182,6 +1182,7 @@ const action_1 = __nccwpck_require__(1231);
 const glob_1 = __nccwpck_require__(1957);
 const fs_1 = __nccwpck_require__(7147);
 const { stat } = fs_1.promises;
+const crypto_1 = __nccwpck_require__(6113);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1199,7 +1200,7 @@ function run() {
                     core.error(error.message);
                 }
             }
-            let bundlePath = path.join(os.tmpdir(), 'Merged.xcresult');
+            let bundlePath = path.join(os.tmpdir(), 'Merged_' + (0, crypto_1.randomUUID)() + '.xcresult');
             if (inputPaths.length > 1) {
                 yield mergeResultBundle(bundlePaths, bundlePath);
             }
