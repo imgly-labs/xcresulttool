@@ -30,7 +30,7 @@ export class Parser {
       reference
     ]
     const options = {
-      silent: true
+      silent: false
     }
 
     await exec.exec('xcrun', args, options)
@@ -42,7 +42,7 @@ export class Parser {
 
     let output = ''
     const options = {
-      silent: true,
+      silent: false,
       listeners: {
         stdout: (data: Buffer) => {
           output += data.toString()
@@ -70,7 +70,7 @@ export class Parser {
 
     let output = ''
     const options = {
-      silent: true,
+      silent: false,
       listeners: {
         stdout: (data: Buffer) => {
           output += data.toString()

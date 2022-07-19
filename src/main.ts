@@ -153,7 +153,7 @@ async function mergeResultBundle(
     .concat(inputPaths)
     .concat(['--output-path', outputPath])
   const options = {
-    silent: true
+    silent: false
   }
 
   await exec.exec('xcrun', args, options)
