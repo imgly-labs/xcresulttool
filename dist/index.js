@@ -1286,7 +1286,7 @@ function mergeResultBundle(inputPaths, outputPath) {
             .concat(inputPaths)
             .concat(['--output-path', outputPath]);
         const options = {
-            silent: true
+            silent: false
         };
         yield exec.exec('xcrun', args, options);
     });
@@ -1387,7 +1387,7 @@ class Parser {
                 reference
             ];
             const options = {
-                silent: true
+                silent: false
             };
             yield exec.exec('xcrun', args, options);
             return Buffer.from(yield readFile(outputPath));
@@ -1398,7 +1398,7 @@ class Parser {
             const args = ['xccov', 'view', '--report', '--json', this.bundlePath];
             let output = '';
             const options = {
-                silent: true,
+                silent: false,
                 listeners: {
                     stdout: (data) => {
                         output += data.toString();
@@ -1425,7 +1425,7 @@ class Parser {
             }
             let output = '';
             const options = {
-                silent: true,
+                silent: false,
                 listeners: {
                     stdout: (data) => {
                         output += data.toString();
