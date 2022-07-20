@@ -3,6 +3,7 @@
 * updated dependencies to avoid type errors
 * increased node version 12.x -> 16.x to run on M1 Macs
 * fixed "Merged.xcarchive already exists" bug on self-hosted runners
+* version number with changes is imgly-labs/xcresulttool@v1.4.4
 
 <p align="center">
   <a href="https://github.com/kishikawakatsumi/xcresulttool/actions"><img alt="xcresulttool status" src="https://github.com/kishikawakatsumi/xcresulttool/workflows/build-test/badge.svg"></a>
