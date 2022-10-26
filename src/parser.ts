@@ -1,6 +1,7 @@
 /*eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as exec from '@actions/exec'
+import * as core from '@actions/core'
 import {promises} from 'fs'
 const {readFile} = promises
 
@@ -32,6 +33,7 @@ export class Parser {
     const options = {
       silent: false
     }
+    core.warning('about to execute: "' + args.join(' ') +'"');
 
     await exec.exec('xcrun', args, options)
     return Buffer.from(await readFile(outputPath))
@@ -50,6 +52,7 @@ export class Parser {
       }
     }
 
+    core.warning('about to execute: "' + args.join(' ') +'"');
     await exec.exec('xcrun', args, options)
     return output
   }
@@ -78,6 +81,7 @@ export class Parser {
       }
     }
 
+    core.warning('about to execute: "' + args.join(' ') +'"');
     await exec.exec('xcrun', args, options)
     return output
   }
