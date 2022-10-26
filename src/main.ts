@@ -4,12 +4,12 @@ import * as exec from '@actions/exec'
 import * as github from '@actions/github'
 import * as os from 'os'
 import * as path from 'path'
-import {Formatter} from './formatter'
-import {Octokit} from '@octokit/action'
-import {glob} from 'glob'
-import {promises} from 'fs'
-const {stat} = promises
-import {randomUUID} from 'crypto'
+import { Formatter } from './formatter'
+import { Octokit } from '@octokit/action'
+import { glob } from 'glob'
+import { promises } from 'fs'
+const { stat } = promises
+import { randomUUID } from 'crypto'
 
 async function run(): Promise<void> {
   try {
@@ -150,12 +150,42 @@ async function mergeResultBundle(
   inputPaths: string[],
   outputPath: string
 ): Promise<void> {
-  const args = ['xcresulttool', 'merge']
-    .concat(inputPaths)
-    .concat(['--output-path', outputPath])
   const options = {
     silent: false
   }
-  core.warning('about to execute: "' + args.join(' ') +'"')
-  await exec.exec('xcrun', args, options)
+  const use_symlinks = true;
+  if (use_symlinks) {
+    await exec.exec('mkdir', ['-p', './.t/']);
+    var symlinkedInputs = [];
+    var counter = 0;
+    for (const inputPath of inputPaths) {
+      const linkname = `./.t/in${counter}`;
+      symlinkedInputs.push(linkname);
+      const lnArgs = ['-s', inputPath, linkname];
+      await exec.exec('ln', lnArgs, options);
+      counter = counter + 1;
+    }
+    const outlink = `./.t/out`;
+    const lnArgs = ['-s', outputPath, outlink];
+    await exec.exec('ln', lnArgs, options);
+
+    const args = ['xcresulttool', 'merge']
+      .concat(symlinkedInputs)
+      .concat(['--output-path', outlink])
+    core.warning('about to execute: "' + args.join(' ') + '"')
+    await exec.exec('xcrun', args, options)
+
+  } else {
+
+    const args = ['xcresulttool', 'merge']
+      .concat(inputPaths)
+      .concat(['--output-path', outputPath])
+    const options = {
+      silent: false
+    }
+    core.warning('about to execute: "' + args.join(' ') + '"')
+    await exec.exec('xcrun', args, options)
+
+  }
+
 }
