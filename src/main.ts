@@ -156,6 +156,6 @@ async function mergeResultBundle(
   const options = {
     silent: false
   }
-
+  core.warning('about to execute: "' + args.join(' ') +'"')
   await exec.exec('xcrun', args, options)
 }
