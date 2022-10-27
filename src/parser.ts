@@ -31,7 +31,7 @@ export class Parser {
       reference
     ]
     const options = {
-      silent: false
+      silent: true
     }
     core.warning('about to execute: "' + args.join(' ') +'"');
 
@@ -44,7 +44,7 @@ export class Parser {
 
     let output = ''
     const options = {
-      silent: false,
+      silent: true,
       listeners: {
         stdout: (data: Buffer) => {
           output += data.toString()
@@ -73,7 +73,7 @@ export class Parser {
 
     let output = ''
     const options = {
-      silent: false,
+      silent: true,
       listeners: {
         stdout: (data: Buffer) => {
           output += data.toString()

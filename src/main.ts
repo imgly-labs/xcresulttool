@@ -151,7 +151,7 @@ async function mergeResultBundle(
   outputPath: string
 ): Promise<void> {
   const options = {
-    silent: false
+    silent: true
   }
   const use_symlinks = true;
   if (use_symlinks) {
