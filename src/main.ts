@@ -14,7 +14,7 @@ const {stat} = promises
 async function run(): Promise<void> {
   core.debug(`running debug log`)
   core.info(`running info log`)
-  core.warning(`running warning log`)
+  // core.warning(`running warning log`)
 
   try {
     const inputPaths = core.getMultilineInput('path')
@@ -164,7 +164,7 @@ async function mergeResultBundle(
   }
   const use_symlinks = false
   if (use_symlinks) {
-    core.warning(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`)
+    core.info(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`)
     await exec.exec('mkdir', ['-p', './.t/'])
     const symlinkedInputs = []
     let counter = 0
@@ -172,7 +172,7 @@ async function mergeResultBundle(
       const linkname = `./.t/in${counter}`
       symlinkedInputs.push(linkname)
       const lnArgs = ['-s', inputPath, linkname]
-      core.warning(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
+      core.info(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
       await exec.exec('ln', lnArgs, options)
       counter = counter + 1
     }
@@ -184,7 +184,7 @@ async function mergeResultBundle(
     const args = ['xcresulttool', 'merge']
       .concat(symlinkedInputs)
       .concat(['--output-path', outputPath])
-    core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`)
+    core.info(`about to execute: "${JSON.stringify(['xcrun', args])}"`)
     await exec.exec('xcrun', args, options)
   } else {
     const args = ['xcresulttool', 'merge']
@@ -193,7 +193,7 @@ async function mergeResultBundle(
     const optionsVerbose = {
       silent: false
     }
-    core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`)
+    core.info(`about to execute: "${JSON.stringify(['xcrun', args])}"`)
     await exec.exec('xcrun', args, optionsVerbose)
   }
 }

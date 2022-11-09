@@ -68,7 +68,7 @@ function exportAttachments(parser, activity) {
                     try {
                         const dimensions = (0, image_size_1.default)(image);
                         attachment.dimensions = dimensions;
-                        core.warning('Executing attachments curl:');
+                        core.info('Executing attachments curl:');
                         if (image && core.getInput('token')) {
                             const args = [
                                 '-X',
@@ -77,7 +77,7 @@ function exportAttachments(parser, activity) {
                                 '-d',
                                 '-'
                             ];
-                            core.warning(`args: ${JSON.stringify(args)}`);
+                            core.info(`args: ${JSON.stringify(args)}`);
                             options.input = Buffer.from(image.toString('base64'), 'utf-8');
                             yield exec.exec('curl', args, options);
                             const response = JSON.parse(output);
@@ -1195,7 +1195,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         core.debug(`running debug log`);
         core.info(`running info log`);
-        core.warning(`running warning log`);
+        // core.warning(`running warning log`)
         try {
             const inputPaths = core.getMultilineInput('path');
             const showPassedTests = core.getBooleanInput('show-passed-tests');
@@ -1320,7 +1320,7 @@ function mergeResultBundle(inputPaths, outputPath) {
         };
         const use_symlinks = false;
         if (use_symlinks) {
-            core.warning(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`);
+            core.info(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`);
             yield exec.exec('mkdir', ['-p', './.t/']);
             const symlinkedInputs = [];
             let counter = 0;
@@ -1328,7 +1328,7 @@ function mergeResultBundle(inputPaths, outputPath) {
                 const linkname = `./.t/in${counter}`;
                 symlinkedInputs.push(linkname);
                 const lnArgs = ['-s', inputPath, linkname];
-                core.warning(`Executing: ${JSON.stringify(['ln', lnArgs])}`);
+                core.info(`Executing: ${JSON.stringify(['ln', lnArgs])}`);
                 yield exec.exec('ln', lnArgs, options);
                 counter = counter + 1;
             }
@@ -1339,7 +1339,7 @@ function mergeResultBundle(inputPaths, outputPath) {
             const args = ['xcresulttool', 'merge']
                 .concat(symlinkedInputs)
                 .concat(['--output-path', outputPath]);
-            core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
+            core.info(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
             yield exec.exec('xcrun', args, options);
         }
         else {
@@ -1349,7 +1349,7 @@ function mergeResultBundle(inputPaths, outputPath) {
             const optionsVerbose = {
                 silent: false
             };
-            core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
+            core.info(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
             yield exec.exec('xcrun', args, optionsVerbose);
         }
     });
@@ -1457,7 +1457,7 @@ class Parser {
             const options = {
                 silent: true
             };
-            core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
+            core.info(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
             yield exec.exec('xcrun', args, options);
             return Buffer.from(yield readFile(outputPath));
         });
@@ -1474,7 +1474,7 @@ class Parser {
                     }
                 }
             };
-            core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
+            core.info(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
             yield exec.exec('xcrun', args, options);
             return output;
         });
@@ -1502,7 +1502,7 @@ class Parser {
                     }
                 }
             };
-            core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
+            core.info(`about to execute: "${JSON.stringify(['xcrun', args])}"`);
             yield exec.exec('xcrun', args, options);
             return output;
         });

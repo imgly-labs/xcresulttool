@@ -56,7 +56,7 @@ export async function exportAttachments(
           const dimensions: Dimensions = sizeOf(image)
           attachment.dimensions = dimensions
 
-          core.warning('Executing attachments curl:')
+          core.info('Executing attachments curl:')
 
           if (image && core.getInput('token')) {
             const args = [
@@ -66,7 +66,7 @@ export async function exportAttachments(
               '-d',
               '-'
             ]
-            core.warning(`args: ${JSON.stringify(args)}`)
+            core.info(`args: ${JSON.stringify(args)}`)
             options.input = Buffer.from(image.toString('base64'), 'utf-8')
 
             await exec.exec('curl', args, options)
