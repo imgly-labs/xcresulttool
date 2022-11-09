@@ -1313,7 +1313,7 @@ function mergeResultBundle(inputPaths, outputPath) {
         const options = {
             silent: true
         };
-        const use_symlinks = true;
+        const use_symlinks = false;
         if (use_symlinks) {
             core.warning(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`);
             yield exec.exec('mkdir', ['-p', './.t/']);
