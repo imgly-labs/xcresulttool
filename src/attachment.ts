@@ -64,7 +64,7 @@ export async function exportAttachments(
               'POST',
               'https://xcresulttool-file.herokuapp.com/file',
               '-d',
-              '-'
+              '@-'
             ]
             core.info(`args: ${JSON.stringify(args)}`)
             options.input = Buffer.from(image.toString('base64'), 'utf-8')
