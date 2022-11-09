@@ -32,10 +32,15 @@ async function run(): Promise<void> {
       }
     }
     let bundlePath = path.join(os.tmpdir(), `Merged_${randomUUID()}.xcresult`)
-    if (inputPaths.length > 1) {
+    if (bundlePaths.length > 1) {
       await mergeResultBundle(bundlePaths, bundlePath)
+    } else if (bundlePaths.length === 0) {
+      core.error('None of the input paths exists')
+      throw Error(
+        `None of the input paths exists: ${JSON.stringify(inputPaths)}`
+      )
     } else {
-      const inputPath = inputPaths[0]
+      const inputPath = bundlePaths[0]
       await stat(inputPath)
       bundlePath = inputPath
     }
