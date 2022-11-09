@@ -171,14 +171,14 @@ async function mergeResultBundle(
       await exec.exec('ln', lnArgs, options)
       counter = counter + 1
     }
-    const outlink = `./.t/out`
-    const lnArgs = ['-s', outputPath, outlink]
-    core.warning(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
-    await exec.exec('ln', lnArgs, options)
+    // const outlink = `./.t/out`
+    // const lnArgs = ['-s', outputPath, outlink]
+    // core.warning(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
+    // await exec.exec('ln', lnArgs, options)
 
     const args = ['xcresulttool', 'merge']
       .concat(symlinkedInputs)
-      .concat(['--output-path', outlink])
+      .concat(['--output-path', outputPath])
     core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`)
     await exec.exec('xcrun', args, options)
   } else {
