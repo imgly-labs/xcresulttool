@@ -43,7 +43,7 @@ export async function exportAttachments(
         )
 
         let output = ''
-        const options = {
+        const options: exec.ExecOptions = {
           silent: true,
           listeners: {
             stdout: (data: Buffer) => {
@@ -64,9 +64,11 @@ export async function exportAttachments(
               'POST',
               'https://xcresulttool-file.herokuapp.com/file',
               '-d',
-              image.toString('base64')
+              '-'
             ]
             core.warning(`args: ${JSON.stringify(args)}`)
+            options.input = Buffer.from(image.toString('base64'), 'utf-8')
+
             await exec.exec('curl', args, options)
             const response = JSON.parse(output)
             if (response) {
