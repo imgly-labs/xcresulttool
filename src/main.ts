@@ -4,14 +4,18 @@ import * as exec from '@actions/exec'
 import * as github from '@actions/github'
 import * as os from 'os'
 import * as path from 'path'
-import { Formatter } from './formatter'
-import { Octokit } from '@octokit/action'
-import { glob } from 'glob'
-import { promises } from 'fs'
-const { stat } = promises
-import { randomUUID } from 'crypto'
+import {Formatter} from './formatter'
+import {Octokit} from '@octokit/action'
+import {glob} from 'glob'
+import {promises} from 'fs'
+import {randomUUID} from 'crypto'
+const {stat} = promises
 
 async function run(): Promise<void> {
+  core.debug(`running debug log`)
+  core.info(`running info log`)
+  core.warning(`running warning log`)
+
   try {
     const inputPaths = core.getMultilineInput('path')
     const showPassedTests = core.getBooleanInput('show-passed-tests')
@@ -153,42 +157,38 @@ async function mergeResultBundle(
   const options = {
     silent: true
   }
-  const use_symlinks = true;
+  const use_symlinks = true
   if (use_symlinks) {
-    core.info(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`)
-    await exec.exec('mkdir', ['-p', './.t/']);
-    var symlinkedInputs = [];
-    var counter = 0;
+    core.warning(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`)
+    await exec.exec('mkdir', ['-p', './.t/'])
+    const symlinkedInputs = []
+    let counter = 0
     for (const inputPath of inputPaths) {
-      const linkname = `./.t/in${counter}`;
-      symlinkedInputs.push(linkname);
-      const lnArgs = ['-s', inputPath, linkname];
-      core.info(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
-      await exec.exec('ln', lnArgs, options);
-      counter = counter + 1;
+      const linkname = `./.t/in${counter}`
+      symlinkedInputs.push(linkname)
+      const lnArgs = ['-s', inputPath, linkname]
+      core.warning(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
+      await exec.exec('ln', lnArgs, options)
+      counter = counter + 1
     }
-    const outlink = `./.t/out`;
-    const lnArgs = ['-s', outputPath, outlink];
-    core.info(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
-    await exec.exec('ln', lnArgs, options);
+    const outlink = `./.t/out`
+    const lnArgs = ['-s', outputPath, outlink]
+    core.warning(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
+    await exec.exec('ln', lnArgs, options)
 
     const args = ['xcresulttool', 'merge']
       .concat(symlinkedInputs)
       .concat(['--output-path', outlink])
-    core.warning( `about to execute: "${JSON.stringify(['xcrun', args])}"`)
+    core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`)
     await exec.exec('xcrun', args, options)
-
   } else {
-
     const args = ['xcresulttool', 'merge']
       .concat(inputPaths)
       .concat(['--output-path', outputPath])
-    const options = {
+    const optionsVerbose = {
       silent: false
     }
-    core.warning( `about to execute: "${JSON.stringify(['xcrun', args])}"`)
-    await exec.exec('xcrun', args, options)
-
+    core.warning(`about to execute: "${JSON.stringify(['xcrun', args])}"`)
+    await exec.exec('xcrun', args, optionsVerbose)
   }
-
 }

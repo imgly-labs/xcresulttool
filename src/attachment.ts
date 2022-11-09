@@ -56,7 +56,7 @@ export async function exportAttachments(
           const dimensions: Dimensions = sizeOf(image)
           attachment.dimensions = dimensions
 
-          core.info("Executing attachments curl:");
+          core.warning('Executing attachments curl:')
 
           if (image && core.getInput('token')) {
             const args = [
@@ -66,21 +66,17 @@ export async function exportAttachments(
               '-d',
               image.toString('base64')
             ]
-            core.info(`args: ${JSON.stringify(args)}`);
-            await exec.exec(
-              'curl',
-              args,
-              options
-            )
+            core.warning(`args: ${JSON.stringify(args)}`)
+            await exec.exec('curl', args, options)
             const response = JSON.parse(output)
             if (response) {
               attachment.link = response.link
             }
           } else {
-            core.info("no img");
+            core.warning('no img')
           }
         } catch {
-          core.info("Exeception occured");
+          core.warning('Exeception occured')
           // no-op
         }
       }
