@@ -155,6 +155,7 @@ async function mergeResultBundle(
   }
   const use_symlinks = true;
   if (use_symlinks) {
+    core.info(`Executing: ${JSON.stringify(['mkdir', ['-p', './.t/']])}`)
     await exec.exec('mkdir', ['-p', './.t/']);
     var symlinkedInputs = [];
     var counter = 0;
@@ -162,17 +163,19 @@ async function mergeResultBundle(
       const linkname = `./.t/in${counter}`;
       symlinkedInputs.push(linkname);
       const lnArgs = ['-s', inputPath, linkname];
+      core.info(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
       await exec.exec('ln', lnArgs, options);
       counter = counter + 1;
     }
     const outlink = `./.t/out`;
     const lnArgs = ['-s', outputPath, outlink];
+    core.info(`Executing: ${JSON.stringify(['ln', lnArgs])}`)
     await exec.exec('ln', lnArgs, options);
 
     const args = ['xcresulttool', 'merge']
       .concat(symlinkedInputs)
       .concat(['--output-path', outlink])
-    core.warning('about to execute: "' + args.join(' ') + '"')
+    core.warning( `about to execute: "${JSON.stringify(['xcrun', args])}"`)
     await exec.exec('xcrun', args, options)
 
   } else {
@@ -183,7 +186,7 @@ async function mergeResultBundle(
     const options = {
       silent: false
     }
-    core.warning('about to execute: "' + args.join(' ') + '"')
+    core.warning( `about to execute: "${JSON.stringify(['xcrun', args])}"`)
     await exec.exec('xcrun', args, options)
 
   }

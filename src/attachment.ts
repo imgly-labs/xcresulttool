@@ -56,24 +56,31 @@ export async function exportAttachments(
           const dimensions: Dimensions = sizeOf(image)
           attachment.dimensions = dimensions
 
+          core.info("Executing attachments curl:");
+
           if (image && core.getInput('token')) {
+            const args = [
+              '-X',
+              'POST',
+              'https://xcresulttool-file.herokuapp.com/file',
+              '-d',
+              image.toString('base64')
+            ]
+            core.info(`args: ${JSON.stringify(args)}`);
             await exec.exec(
               'curl',
-              [
-                '-X',
-                'POST',
-                'https://xcresulttool-file.herokuapp.com/file',
-                '-d',
-                image.toString('base64')
-              ],
+              args,
               options
             )
             const response = JSON.parse(output)
             if (response) {
               attachment.link = response.link
             }
+          } else {
+            core.info("no img");
           }
         } catch {
+          core.info("Exeception occured");
           // no-op
         }
       }
