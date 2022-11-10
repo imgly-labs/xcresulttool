@@ -68,21 +68,21 @@ async function run(): Promise<void> {
         core.warning(
           `The 'title' will be truncated because the character limit (${charactersLimit}) exceeded.`
         )
-        title = title.substring(0, charactersLimit)
+        title = title.substring(0, charactersLimit - 1)
       }
       let reportSummary = report.reportSummary
       if (reportSummary.length > charactersLimit) {
         core.warning(
           `The 'summary' will be truncated because the character limit (${charactersLimit}) exceeded.`
         )
-        reportSummary = reportSummary.substring(0, charactersLimit)
+        reportSummary = reportSummary.substring(0, charactersLimit - 1)
       }
       let reportDetail = report.reportDetail
       if (reportDetail.length > charactersLimit) {
         core.warning(
           `The 'text' will be truncated because the character limit (${charactersLimit}) exceeded.`
         )
-        reportDetail = reportDetail.substring(0, charactersLimit)
+        reportDetail = reportDetail.substring(0, charactersLimit - 1)
       }
 
       if (report.annotations.length > 50) {
