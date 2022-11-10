@@ -11,6 +11,34 @@ import {promises} from 'fs'
 import {randomUUID} from 'crypto'
 const {stat} = promises
 
+// from https://stackoverflow.com/a/51996206
+
+function byteCount(string: string): number {
+  // UTF8
+  return encodeURI(string).split(/%..|./).length - 1
+}
+
+function truncateByBytes(string: string, byteSize: number): string {
+  // UTF8
+  if (byteCount(string) > byteSize) {
+    const charsArray = string.split('')
+    const truncatedStringArray = []
+    let bytesCounter = 0
+    for (const char of charsArray) {
+      bytesCounter += byteCount(char)
+      if (bytesCounter <= byteSize) {
+        truncatedStringArray.push(char)
+      } else {
+        break
+      }
+    }
+    return truncatedStringArray.join('')
+  }
+  return string
+}
+
+// End code from https://stackoverflow.com/a/51996206
+
 async function run(): Promise<void> {
   core.debug(`running debug log`)
   core.info(`running info log`)
@@ -64,26 +92,35 @@ async function run(): Promise<void> {
 
       const charactersLimit = 65535
       let title = core.getInput('title')
-      if (title.length > charactersLimit) {
+      const truncatedTitle = truncateByBytes(title, charactersLimit - 1)
+      if (truncatedTitle.length !== title.length) {
         core.warning(
           `The 'title' will be truncated because the character limit (${charactersLimit}) exceeded.`
         )
-        title = title.substring(0, charactersLimit - 1)
       }
+      title = truncatedTitle
       let reportSummary = report.reportSummary
-      if (reportSummary.length > charactersLimit) {
+      const truncatedReportSummary = truncateByBytes(
+        reportSummary,
+        charactersLimit - 1
+      )
+      if (truncatedReportSummary.length !== reportSummary.length) {
         core.warning(
           `The 'summary' will be truncated because the character limit (${charactersLimit}) exceeded.`
         )
-        reportSummary = reportSummary.substring(0, charactersLimit - 1)
       }
+      reportSummary = truncatedReportSummary
       let reportDetail = report.reportDetail
-      if (reportDetail.length > charactersLimit) {
+      const truncatedReportDetail = truncateByBytes(
+        reportDetail,
+        charactersLimit - 1
+      )
+      if (truncatedReportDetail.length !== reportDetail.length) {
         core.warning(
           `The 'text' will be truncated because the character limit (${charactersLimit}) exceeded.`
         )
-        reportDetail = reportDetail.substring(0, charactersLimit - 1)
       }
+      reportDetail = truncatedReportDetail
 
       if (report.annotations.length > 50) {
         core.warning(

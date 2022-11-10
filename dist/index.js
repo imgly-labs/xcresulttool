@@ -1191,6 +1191,31 @@ const glob_1 = __nccwpck_require__(1957);
 const fs_1 = __nccwpck_require__(7147);
 const crypto_1 = __nccwpck_require__(6113);
 const { stat } = fs_1.promises;
+// from https://stackoverflow.com/a/51996206
+function byteCount(string) {
+    // UTF8
+    return encodeURI(string).split(/%..|./).length - 1;
+}
+function truncateByBytes(string, byteSize) {
+    // UTF8
+    if (byteCount(string) > byteSize) {
+        const charsArray = string.split('');
+        const truncatedStringArray = [];
+        let bytesCounter = 0;
+        for (const char of charsArray) {
+            bytesCounter += byteCount(char);
+            if (bytesCounter <= byteSize) {
+                truncatedStringArray.push(char);
+            }
+            else {
+                break;
+            }
+        }
+        return truncatedStringArray.join('');
+    }
+    return string;
+}
+// End code from https://stackoverflow.com/a/51996206
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         core.debug(`running debug log`);
@@ -1238,20 +1263,23 @@ function run() {
                 const sha = (pr && pr.head.sha) || github.context.sha;
                 const charactersLimit = 65535;
                 let title = core.getInput('title');
-                if (title.length > charactersLimit) {
+                const truncatedTitle = truncateByBytes(title, charactersLimit - 1);
+                if (truncatedTitle.length !== title.length) {
                     core.warning(`The 'title' will be truncated because the character limit (${charactersLimit}) exceeded.`);
-                    title = title.substring(0, charactersLimit - 1);
                 }
+                title = truncatedTitle;
                 let reportSummary = report.reportSummary;
-                if (reportSummary.length > charactersLimit) {
+                const truncatedReportSummary = truncateByBytes(reportSummary, charactersLimit - 1);
+                if (truncatedReportSummary.length !== reportSummary.length) {
                     core.warning(`The 'summary' will be truncated because the character limit (${charactersLimit}) exceeded.`);
-                    reportSummary = reportSummary.substring(0, charactersLimit - 1);
                 }
+                reportSummary = truncatedReportSummary;
                 let reportDetail = report.reportDetail;
-                if (reportDetail.length > charactersLimit) {
+                const truncatedReportDetail = truncateByBytes(reportDetail, charactersLimit - 1);
+                if (truncatedReportDetail.length !== reportDetail.length) {
                     core.warning(`The 'text' will be truncated because the character limit (${charactersLimit}) exceeded.`);
-                    reportDetail = reportDetail.substring(0, charactersLimit - 1);
                 }
+                reportDetail = truncatedReportDetail;
                 if (report.annotations.length > 50) {
                     core.warning('Annotations that exceed the limit (50) will be truncated.');
                 }
