@@ -136,8 +136,16 @@ export class TestCodeCoverage {
 
   constructor(codeCoverage: CodeCoverage) {
     const baseUrl = 'https://xcresulttool-static.netlify.app/i/'
+    const fileCount = codeCoverage.targets
+      .map(tgt => tgt.files.length)
+      .reduce((a, b) => a + b, 0)
+    const collapseCoverage = fileCount > 3
 
     this.lines.push('### Code Coverage')
+    if (collapseCoverage) {
+      this.lines.push('<details>')
+      this.lines.push(`<summary>Coverage of ${fileCount} sources</summary>`)
+    }
     this.lines.push('<table>')
     this.lines.push('<tr>')
     this.lines.push('<th width="344px">')
@@ -202,7 +210,7 @@ export class TestCodeCoverage {
       this.lines.push(`<td align="right"><b>${total.coveredLines}`)
       this.lines.push(`<td align="right"><b>${total.executableLines}`)
 
-      this.lines.push('</table>\n')
+      this.lines.push('</table>')
     } else {
       this.lines.push('<tr>')
       this.lines.push(`<td>`)
@@ -211,7 +219,12 @@ export class TestCodeCoverage {
       this.lines.push(`<td align="right">0`)
       this.lines.push(`<td align="right">0`)
 
-      this.lines.push('</table>\n')
+      this.lines.push('</table>')
+    }
+    if (collapseCoverage) {
+      this.lines.push('</details>\n')
+    } else {
+      this.lines.push('')
     }
   }
 }

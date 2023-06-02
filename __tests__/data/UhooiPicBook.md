@@ -39,6 +39,8 @@ All tests passed :tada:
 ---
 
 ### Code Coverage
+<details>
+<summary>Coverage of 30 sources</summary>
 <table>
 <tr>
 <th width="344px">
@@ -238,6 +240,7 @@ All tests passed :tada:
 <td align="right"><b>442
 <td align="right"><b>1074
 </table>
+</details>
 
 ### Test Details
 

@@ -51,10 +51,7 @@ const {
 	AsyncGeneratorFunction
 } = data;
 
-const {
-	get: localWeakMapGet,
-	set: localWeakMapSet
-} = LocalWeakMap.prototype;
+const localWeakMapGet = LocalWeakMap.prototype.get;
 
 function localUnexpected() {
 	return new VMError('Should not happen');
@@ -67,8 +64,7 @@ Object.defineProperties(global, {
 	global: {value: global, writable: true, configurable: true, enumerable: true},
 	globalThis: {value: global, writable: true, configurable: true},
 	GLOBAL: {value: global, writable: true, configurable: true},
-	root: {value: global, writable: true, configurable: true},
-	Error: {value: LocalError}
+	root: {value: global, writable: true, configurable: true}
 });
 
 if (!localReflectDefineProperty(global, 'VMError', {
@@ -286,8 +282,8 @@ if (typeof OriginalCallSite === 'function') {
 				}
 				return value(error, sst);
 			};
-			localReflectApply(localWeakMapSet, wrappedPrepareStackTrace, [value, newWrapped]);
-			localReflectApply(localWeakMapSet, wrappedPrepareStackTrace, [newWrapped, newWrapped]);
+			wrappedPrepareStackTrace.set(value, newWrapped);
+			wrappedPrepareStackTrace.set(newWrapped, newWrapped);
 			currentPrepareStackTrace = newWrapped;
 		}
 	})) throw localUnexpected();
@@ -312,8 +308,7 @@ const withProxy = localObjectFreeze({
 const interanState = localObjectFreeze({
 	__proto__: null,
 	wrapWith(x) {
-		if (x === null || x === undefined) return x;
-		return new LocalProxy(localObject(x), withProxy);
+		return new LocalProxy(x, withProxy);
 	},
 	handleException: ensureThis,
 	import(what) {
