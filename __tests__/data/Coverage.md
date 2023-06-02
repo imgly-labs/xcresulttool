@@ -50,6 +50,8 @@
 ---
 
 ### Code Coverage
+<details>
+<summary>Coverage of 5 sources</summary>
 <table>
 <tr>
 <th width="344px">
@@ -81,6 +83,7 @@
 <td align="right"><b>14
 <td align="right"><b>31
 </table>
+</details>
 
 ### Test Details
 

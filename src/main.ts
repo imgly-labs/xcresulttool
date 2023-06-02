@@ -8,8 +8,8 @@ import {Formatter} from './formatter'
 import {Octokit} from '@octokit/action'
 import {glob} from 'glob'
 import {promises} from 'fs'
-const {stat} = promises
 import {randomUUID} from 'crypto'
+const {stat} = promises
 
 async function run(): Promise<void> {
   try {

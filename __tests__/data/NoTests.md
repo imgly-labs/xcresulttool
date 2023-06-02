@@ -45,6 +45,8 @@ All tests passed :tada:
 ---
 
 ### Code Coverage
+<details>
+<summary>Coverage of 4 sources</summary>
 <table>
 <tr>
 <th width="344px">
@@ -76,6 +78,7 @@ All tests passed :tada:
 <td align="right"><b>9
 <td align="right"><b>9
 </table>
+</details>
 
 ### Test Details
 
