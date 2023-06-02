@@ -1181,8 +1181,8 @@ const formatter_1 = __nccwpck_require__(7556);
 const action_1 = __nccwpck_require__(1231);
 const glob_1 = __nccwpck_require__(1957);
 const fs_1 = __nccwpck_require__(7147);
-const { stat } = fs_1.promises;
 const crypto_1 = __nccwpck_require__(6113);
+const { stat } = fs_1.promises;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -1200,7 +1200,7 @@ function run() {
                     core.error(error.message);
                 }
             }
-            let bundlePath = path.join(os.tmpdir(), 'Merged_' + (0, crypto_1.randomUUID)() + '.xcresult');
+            let bundlePath = path.join(os.tmpdir(), `Merged_${(0, crypto_1.randomUUID)()}.xcresult`);
             if (inputPaths.length > 1) {
                 yield mergeResultBundle(bundlePaths, bundlePath);
             }
@@ -1655,7 +1655,15 @@ class TestCodeCoverage {
     constructor(codeCoverage) {
         this.lines = [];
         const baseUrl = 'https://xcresulttool-static.netlify.app/i/';
+        const fileCount = codeCoverage.targets
+            .map(tgt => tgt.files.length)
+            .reduce((a, b) => a + b, 0);
+        const collapseCoverage = fileCount > 3;
         this.lines.push('### Code Coverage');
+        if (collapseCoverage) {
+            this.lines.push('<details>');
+            this.lines.push(`<summary>Coverage of ${fileCount} sources</summary>`);
+        }
         this.lines.push('<table>');
         this.lines.push('<tr>');
         this.lines.push('<th width="344px">');
@@ -1706,7 +1714,7 @@ class TestCodeCoverage {
             this.lines.push(`<td align="right"><b>${lineCoverage.toFixed(2)} %`);
             this.lines.push(`<td align="right"><b>${total.coveredLines}`);
             this.lines.push(`<td align="right"><b>${total.executableLines}`);
-            this.lines.push('</table>\n');
+            this.lines.push('</table>');
         }
         else {
             this.lines.push('<tr>');
@@ -1715,7 +1723,13 @@ class TestCodeCoverage {
             this.lines.push(`<td align="right">0 %`);
             this.lines.push(`<td align="right">0`);
             this.lines.push(`<td align="right">0`);
-            this.lines.push('</table>\n');
+            this.lines.push('</table>');
+        }
+        if (collapseCoverage) {
+            this.lines.push('</details>\n');
+        }
+        else {
+            this.lines.push('');
         }
     }
 }
