@@ -444,8 +444,22 @@ class Formatter {
                     }, {});
                     const group = {};
                     for (const [identifier, details] of Object.entries(detailGroup)) {
+                        // Repeated tests might have one success and multiple failures in the result, take only the success if so.
+                        const ignoredFailures = new Set();
+                        for (const detail of details) {
+                            const test = detail;
+                            if (test.testStatus === 'Success' &&
+                                test.identifierURL !== undefined) {
+                                ignoredFailures.add(test.identifierURL);
+                            }
+                        }
                         const [stats, duration] = details.reduce(([stats, duration], detail) => {
                             const test = detail;
+                            if (test.testStatus !== 'Success' &&
+                                test.identifierURL !== undefined &&
+                                ignoredFailures.has(test.identifierURL)) {
+                                return [stats, duration];
+                            }
                             if (test.testStatus) {
                                 switch (test.testStatus) {
                                     case 'Success':

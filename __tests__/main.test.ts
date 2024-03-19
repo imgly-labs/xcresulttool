@@ -8,6 +8,19 @@ import {promises} from 'fs'
 const {readFile, writeFile} = promises
 import {Formatter, FormatterOptions} from '../src/formatter'
 
+/*
+test('repeatfail.xcresult', async () => {
+  const bundlePath = '_raven_repeats/repeatfail.xcresult'
+  const formatter = new Formatter(bundlePath)
+  const report = await formatter.format()
+  const reportText = `${report.reportSummary}\n${report.reportDetail}`
+
+  const outputPath = path.join('_raven_repeats', 'repeatfail.md')
+  await writeFile(outputPath, reportText)
+  await console.log("LOGMARK " + report.testStatus)
+})
+*/
+
 test('Example.xcresult', async () => {
   const bundlePath = '__tests__/data/Example.xcresult'
   const formatter = new Formatter(bundlePath)
