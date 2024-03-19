@@ -13,7 +13,15 @@ import {CodeCoverage} from './coverage'
 export class TestReport {
   entityName?: string
   creatingWorkspaceFilePath?: string
-  testStatus = 'neutral'
+  testStatus:
+    | 'neutral'
+    | 'failure'
+    | 'success'
+    | 'skipped'
+    | 'action_required'
+    | 'cancelled'
+    | 'stale'
+    | 'timed_out' = 'neutral'
 
   buildLog?: BuildLog
   readonly chapters: TestReportChapter[] = []
@@ -235,7 +243,7 @@ export class Annotation {
   end_line: number
   start_column?: number
   end_column?: number
-  annotation_level: string
+  annotation_level: 'failure' | 'warning' | 'notice'
   message: string
   title?: string
   raw_details?: string
@@ -244,7 +252,7 @@ export class Annotation {
     path: string,
     start_line: number,
     end_line: number,
-    annotation_level: string,
+    annotation_level: 'failure' | 'warning' | 'notice',
     message: string,
     title?: string,
     raw_details?: string
