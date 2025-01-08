@@ -161,13 +161,10 @@ async function run(): Promise<void> {
             continue
           }
 
-          const artifactClient = artifact.create()
+          const artifactClient = new artifact.DefaultArtifactClient()
           const artifactName = path.basename(uploadBundlePath)
 
           const rootDirectory = uploadBundlePath
-          const options = {
-            continueOnError: false
-          }
 
           glob(`${uploadBundlePath}/**/*`, async (error, files) => {
             if (error) {
@@ -177,8 +174,7 @@ async function run(): Promise<void> {
               await artifactClient.uploadArtifact(
                 artifactName,
                 files,
-                rootDirectory,
-                options
+                rootDirectory
               )
             }
           })
